@@ -1,0 +1,88 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}Mi perfil{% endblock %}
+
+{% block contenido %}
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            Cuenta
+        </span>
+
+        <h1>Mi perfil</h1>
+
+        <p>Tu información personal dentro del sistema.</p>
+
+    </div>
+
+    <div class="table-header-actions">
+        <a href="{% url 'perfil_editar' %}" class="btn btn-secondary btn-sm">✏️ Editar mis datos</a>
+        <a href="{% url 'perfil_contrasena' %}" class="btn btn-secondary btn-sm">🔑 Cambiar contraseña</a>
+    </div>
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+        <div>
+            <h2>Datos de mi cuenta</h2>
+            <p>Información básica de tu registro.</p>
+        </div>
+    </div>
+
+    <div class="detail-grid">
+
+        <div class="detail-item">
+            <span class="detail-label">Nombre completo</span>
+            <span class="detail-value">{{ empleado.nombre_completo }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Correo electrónico</span>
+            <span class="detail-value">{{ empleado.correo }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Puesto</span>
+            <span class="detail-value">{{ empleado.puesto }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Departamento</span>
+            <span class="detail-value">{{ empleado.departamento.nombre }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Fecha de ingreso</span>
+            <span class="detail-value">{{ empleado.fecha_ingreso|date:"d/m/Y" }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Rol</span>
+            <span class="detail-value">
+                {% if empleado.es_administrador %}
+                    <span class="badge role-admin">Administrador</span>
+                {% else %}
+                    <span class="badge role-user">Empleado</span>
+                {% endif %}
+            </span>
+        </div>
+
+    </div>
+
+    <div class="form-container" style="margin-top: 1rem;">
+
+        <div class="confirm-note">
+            <strong>Nota:</strong> tu puesto, departamento y rol los gestiona un
+            administrador. Solo puedes editar tu nombre, apellido, correo y contraseña.
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

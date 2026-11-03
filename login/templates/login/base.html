@@ -1,0 +1,290 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block titulo_pagina %}Dashboard{% endblock %} | VOLTRIX</title>
+
+    <!-- Fuente Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- CSS de la aplicación -->
+    <link
+        rel="stylesheet"
+        href="{% static 'login/principal.css' %}"
+    >
+
+    {% block estilos_extras %}{% endblock %}
+</head>
+
+
+<body class="dashboard-body">
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <header class="navbar">
+
+        <div class="logo-area">
+
+            <!-- Logo de VOLTRIX (imagen optimizada en login/static/imagenes/logo.png) -->
+          <span class="logo">
+  <img src="{% static 'imagenes/logo.png' %}" alt="Logo de VOLTRIX" width="38" height="38" >
+</span>
+            <div class="brand-info">
+
+                <h2>
+                    VOLTRIX
+                </h2>
+
+                <span>
+                    Panel administrativo
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- Usuario -->
+
+        <div class="user-area">
+
+            <div class="user-info">
+
+                <span class="user-label">
+                    Sesión iniciada{% if es_administrador %} · Administrador{% endif %}
+                </span>
+
+                <strong>
+                    {{ empleado_sesion.nombre_completo }}
+                </strong>
+
+            </div>
+
+
+            <!-- Cerrar sesión -->
+
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">
+                    Cerrar sesión
+                </button>
+            </form>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         LAYOUT DEL DASHBOARD
+    ====================================================== -->
+
+    <div class="dashboard-layout">
+
+
+        <!-- =================================================
+             SIDEBAR (adaptado al rol)
+        ================================================== -->
+
+        <aside class="sidebar">
+
+            <nav class="sidebar-nav">
+
+
+                <!-- INICIO -->
+
+                <a
+                    href="{% url 'home' %}"
+                    class="sidebar-btn {% if modulo_activo == 'inicio' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        📊
+                    </span>
+
+                    <span class="nav-text">
+                        Inicio
+                    </span>
+
+                </a>
+
+
+                <!-- EMPLEADOS -->
+
+                <a
+                    href="{% url 'empleado_list' %}"
+                    class="sidebar-btn {% if modulo_activo == 'empleados' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        👥
+                    </span>
+
+                    <span class="nav-text">
+                        Empleados
+                    </span>
+
+                </a>
+
+
+                <!-- DEPARTAMENTOS -->
+
+                <a
+                    href="{% url 'departamento_list' %}"
+                    class="sidebar-btn {% if modulo_activo == 'departamentos' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        🏢
+                    </span>
+
+                    <span class="nav-text">
+                        Departamentos
+                    </span>
+
+                </a>
+
+
+                <!-- PROVEEDORES -->
+
+                <a
+                    href="{% url 'proveedor_list' %}"
+                    class="sidebar-btn {% if modulo_activo == 'proveedores' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        📦
+                    </span>
+
+                    <span class="nav-text">
+                        Proveedores
+                    </span>
+
+                </a>
+
+
+                <!-- MI PERFIL -->
+
+                <a
+                    href="{% url 'perfil' %}"
+                    class="sidebar-btn {% if modulo_activo == 'perfil' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        👤
+                    </span>
+
+                    <span class="nav-text">
+                        Mi perfil
+                    </span>
+
+                </a>
+
+
+                <!-- ADMINISTRACIÓN (solo administradores) -->
+
+                {% if es_administrador %}
+
+                <div class="sidebar-separator">
+                    <span>Administración</span>
+                </div>
+
+                <a
+                    href="{% url 'empleado_create' %}"
+                    class="sidebar-btn {% if modulo_activo == 'nuevo_empleado' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        ➕
+                    </span>
+
+                    <span class="nav-text">
+                        Nuevo empleado
+                    </span>
+
+                </a>
+
+                <a
+                    href="{% url 'roles_list' %}"
+                    class="sidebar-btn {% if modulo_activo == 'roles' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        🔐
+                    </span>
+
+                    <span class="nav-text">
+                        Roles y permisos
+                    </span>
+
+                </a>
+
+                <a
+                    href="{% url 'auditoria_list' %}"
+                    class="sidebar-btn {% if modulo_activo == 'auditoria' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        📜
+                    </span>
+
+                    <span class="nav-text">
+                        Auditoría
+                    </span>
+
+                </a>
+
+                {% endif %}
+
+            </nav>
+
+        </aside>
+
+
+        <!-- =================================================
+             CONTENIDO PRINCIPAL
+        ================================================== -->
+
+        <main class="main-container">
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% block contenido %}{% endblock %}
+
+        </main>
+
+    </div>
+
+    <!-- =====================================================
+         PIE DE PÁGINA
+    ====================================================== -->
+
+    <footer class="app-footer">
+
+        <p>
+            © 2026 VOLTRIX · Panel administrativo
+        </p>
+
+    </footer>
+
+</body>
+
+</html>

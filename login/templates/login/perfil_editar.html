@@ -1,0 +1,61 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}Editar mi perfil{% endblock %}
+
+{% block contenido %}
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            <a href="{% url 'perfil' %}" class="breadcrumb">← Mi perfil</a>
+        </span>
+
+        <h1>Editar mis datos</h1>
+
+        <p>Actualiza tu nombre, apellido y correo de acceso.</p>
+
+    </div>
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+        <div>
+            <h2>Datos personales</h2>
+            <p>Los campos marcados con * son obligatorios.</p>
+        </div>
+        <a href="{% url 'perfil' %}" class="btn-clear">← Cancelar</a>
+    </div>
+
+    <div class="form-container">
+
+        <form method="post" class="formulario" novalidate>
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="form-group{% if field.errors %} has-error{% endif %}">
+                <label class="form-label" for="{{ field.id_for_label }}">
+                    {{ field.label }}{% if field.field.required %} *{% endif %}
+                </label>
+                {{ field }}
+                {% for error in field.errors %}
+                    <small class="form-error">{{ error }}</small>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                <a href="{% url 'perfil' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

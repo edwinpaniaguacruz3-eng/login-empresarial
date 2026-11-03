@@ -1,0 +1,28 @@
+{% if page_obj.has_other_pages %}
+<nav class="pagination" aria-label="Paginación">
+
+    {% if page_obj.has_previous %}
+    <a
+        class="page-link"
+        href="?{% if query_busqueda %}q={{ query_busqueda|urlencode }}&{% endif %}{% if modulo_actual %}modulo={{ modulo_actual }}&{% endif %}{% if accion_actual %}accion={{ accion_actual }}&{% endif %}page={{ page_obj.previous_page_number }}"
+    >
+        ← Anterior
+    </a>
+    {% endif %}
+
+    <span class="page-info">
+        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        ({{ page_obj.paginator.count }} registro{{ page_obj.paginator.count|pluralize }})
+    </span>
+
+    {% if page_obj.has_next %}
+    <a
+        class="page-link"
+        href="?{% if query_busqueda %}q={{ query_busqueda|urlencode }}&{% endif %}{% if modulo_actual %}modulo={{ modulo_actual }}&{% endif %}{% if accion_actual %}accion={{ accion_actual }}&{% endif %}page={{ page_obj.next_page_number }}"
+    >
+        Siguiente →
+    </a>
+    {% endif %}
+
+</nav>
+{% endif %}

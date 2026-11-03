@@ -1,0 +1,364 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}Dashboard{% endblock %}
+
+{% block contenido %}
+
+<!-- =================================================
+     ENCABEZADO
+================================================== -->
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            Visión general
+        </span>
+
+        <h1>
+            Panel de control
+        </h1>
+
+        <p>
+            Gestiona la información de empleados y
+            departamentos de manera centralizada.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =================================================
+     TARJETAS DE ESTADÍSTICAS
+================================================== -->
+
+<section class="metrics-grid">
+
+
+    <!-- TOTAL EMPLEADOS -->
+
+    <div class="metric-card">
+
+        <div class="metric-header">
+
+            <span class="metric-title">
+                Total Empleados
+            </span>
+
+            <div class="metric-icon-bg">
+                👥
+            </div>
+
+        </div>
+
+        <p class="card-value">
+            {{ total_empleados }}
+        </p>
+
+        <span class="metric-description">
+            Registrados en la plataforma
+        </span>
+
+    </div>
+
+
+    <!-- EMPLEADOS ACTIVOS -->
+
+    <div class="metric-card">
+
+        <div class="metric-header">
+
+            <span class="metric-title">
+                Empleados Activos
+            </span>
+
+            <div class="metric-icon-bg">
+                ✓
+            </div>
+
+        </div>
+
+        <p class="card-value">
+            {{ empleados_activos }}
+        </p>
+
+        <span class="metric-description">
+            Actualmente en plantilla
+        </span>
+
+    </div>
+
+
+    <!-- DEPARTAMENTOS -->
+
+    <div class="metric-card">
+
+        <div class="metric-header">
+
+            <span class="metric-title">
+                Departamentos
+            </span>
+
+            <div class="metric-icon-bg">
+                🏢
+            </div>
+
+        </div>
+
+        <p class="card-value">
+            {{ total_departamentos }}
+        </p>
+
+        <span class="metric-description">
+            Áreas operativas
+        </span>
+
+    </div>
+
+</section>
+
+
+<!-- =================================================
+     DIRECTORIO DE EMPLEADOS
+================================================== -->
+
+<section class="content-section">
+
+
+    <!-- CABECERA DE LA TABLA -->
+
+    <div class="table-header">
+
+        <!-- Título -->
+
+        <div>
+
+            <h2>
+                Directorio de Empleados
+            </h2>
+
+            <p
+                style="
+                    font-size: 0.85rem;
+                    color: var(--text-muted);
+                "
+            >
+                Listado actualizado de personal.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             BUSCADOR
+        ================================================== -->
+
+        <form
+            method="GET"
+            action="{% url 'home' %}"
+            class="search-form"
+        >
+
+            <input
+                type="text"
+                name="q"
+                value="{{ query_busqueda }}"
+                placeholder="Buscar por nombre o puesto..."
+                class="search-input"
+            >
+
+
+            <button
+                type="submit"
+                class="btn-search"
+            >
+                Buscar
+            </button>
+
+
+            {% if query_busqueda %}
+
+            <a
+                href="{% url 'home' %}"
+                class="btn-clear"
+            >
+                Limpiar
+            </a>
+
+            {% endif %}
+
+        </form>
+
+    </div>
+
+
+    <!-- =================================================
+         TABLA
+    ================================================== -->
+
+    <div class="table-container">
+
+        <table class="employee-table">
+
+
+            <!-- CABECERA -->
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Empleado
+                    </th>
+
+                    <th>
+                        Correo
+                    </th>
+
+                    <th>
+                        Puesto
+                    </th>
+
+                    <th>
+                        Departamento
+                    </th>
+
+                    <th>
+                        Estado
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <!-- CUERPO -->
+
+            <tbody>
+
+
+                {% for emp in page_obj %}
+
+                    <tr>
+
+
+                        <!-- EMPLEADO -->
+
+                        <td>
+
+                            <div class="employee-cell">
+
+                                <!-- Avatar -->
+
+                                <div class="avatar">
+                                    {{ emp.iniciales }}
+                                </div>
+
+                                <!-- Nombre -->
+
+                                <div class="employee-info">
+
+                                    <a href="{% url 'empleado_detail' pk=emp.pk %}" class="employee-link">
+                                        {{ emp.nombre }} {{ emp.apellido }}
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- CORREO -->
+
+                        <td
+                            style="
+                                color: var(--text-muted);
+                            "
+                        >
+                            {{ emp.correo }}
+                        </td>
+
+
+                        <!-- PUESTO -->
+
+                        <td>
+                            {{ emp.puesto }}
+                        </td>
+
+
+                        <!-- DEPARTAMENTO -->
+
+                        <td>
+                            {{ emp.departamento.nombre }}
+                        </td>
+
+
+                        <!-- ESTADO -->
+
+                        <td>
+
+                            {% if emp.activo %}
+
+                                <span class="badge active">
+                                    Activo
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge inactive">
+                                    Inactivo
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <!-- SIN RESULTADOS -->
+
+                    <tr>
+
+                        <td
+                            colspan="5"
+                            class="no-data"
+                        >
+
+                            {% if query_busqueda %}
+
+                                No se encontraron resultados
+                                para
+
+                                <strong>
+                                    "{{ query_busqueda }}"
+                                </strong>.
+
+                            {% else %}
+
+                                No hay empleados registrados
+                                actualmente.
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% include "login/_pagination.html" %}
+
+</section>
+
+{% endblock %}

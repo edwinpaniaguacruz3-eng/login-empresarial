@@ -1,0 +1,432 @@
+/* =========================================
+   VOLTRIX - LOGIN
+   login.css
+   Diseño oscuro premium · Paleta oficial
+   ========================================= */
+
+:root {
+    color-scheme: dark;
+
+    --primary: #2563EB;
+    --primary-dark: #1D4ED8;
+    --accent: #38BDF8;
+
+    --background: #0B1220;
+    --surface: #0D1526;
+
+    --text: #F8FAFC;
+    --text-light: #94A3B8;
+
+    --border-color: rgba(148, 163, 184, 0.10);
+
+    --success: #34D399;
+    --success-light: rgba(16, 185, 129, 0.12);
+
+    --danger: #F87171;
+    --danger-light: rgba(239, 68, 68, 0.12);
+
+    --warning: #FBBF24;
+    --warning-light: rgba(251, 191, 36, 0.12);
+}
+
+/* --- RESET & BASICS --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    height: 100vh;
+    background-color: #0B1220;
+    overflow: hidden;
+}
+
+::selection {
+    background: rgba(37, 99, 235, 0.35);
+    color: #FFFFFF;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0B1220;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1B2942;
+    border-radius: 8px;
+    border: 2px solid #0B1220;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #26385A;
+}
+
+.login-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* --- PANEL IZQUIERDO (HERO SECTION) --- */
+.hero-section {
+    flex: 1.2;
+    position: relative;
+    background: #0B1220;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 56px 64px;
+    color: #ffffff;
+}
+
+.hero-header,
+.hero-body,
+.hero-footer {
+    position: relative;
+    z-index: 2;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Espacio reservado para el logo (contenedor con borde de acento) */
+.brand-logo i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    font-size: 18px;
+    color: var(--accent);
+
+    background: rgba(37, 99, 235, 0.18);
+
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    border-radius: 12px;
+
+}
+
+/* Logo como imagen: mantiene sus proporciones y evita el hueco de línea base */
+.brand-logo img {
+    display: block;
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+.brand-logo h2 {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.brand-logo p {
+    font-size: 12px;
+    color: var(--text-light);
+    opacity: 0.9;
+}
+
+.hero-body h1 {
+    font-size: 38px;
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 18px;
+}
+
+.hero-body p {
+    font-size: 16px;
+    max-width: 480px;
+    line-height: 1.6;
+    color: #C3D0E2;
+}
+
+.hero-footer {
+    display: flex;
+    gap: 30px;
+    border-top: 1px solid rgba(148, 163, 184, 0.12);
+    padding-top: 20px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #C3D0E2;
+}
+
+.feature-item i {
+    font-size: 15px;
+    color: var(--accent);
+}
+
+/* --- PANEL DERECHO (FORMULARIO) --- */
+.form-section {
+    flex: 0.9;
+    background-color: #0D1526;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    position: relative;
+}
+
+.lang-selector {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    font-size: 13px;
+    color: var(--text-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.form-wrapper {
+    width: 100%;
+    max-width: 380px;
+}
+
+.form-wrapper h2 {
+    font-size: 24px;
+    color: #FFFFFF;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 30px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #C7D2E0;
+    margin-bottom: 8px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.field-icon {
+    position: absolute;
+    left: 14px;
+    color: #5B7191;
+    font-size: 15px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 14px;
+    color: #5B7191;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 12px 14px 12px 42px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 8px;
+    background-color: #0B1220;
+    color: #F8FAFC;
+    font-size: 14px;
+    outline: none;
+}
+
+.input-wrapper input::placeholder {
+    color: #54657F;
+}
+
+.input-wrapper input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+.input-wrapper input:-webkit-autofill {
+    -webkit-text-fill-color: #F8FAFC;
+    -webkit-box-shadow: 0 0 0 1000px #0B1220 inset;
+    caret-color: #F8FAFC;
+}
+
+.options-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    font-size: 13px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #AEBBD0;
+    cursor: pointer;
+}
+
+.remember-me input[type="checkbox"] {
+    accent-color: #2563eb;
+}
+
+.forgot-pass {
+    color: #6EA8FE;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.forgot-pass:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background-color: #2563EB;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-submit:hover {
+    background-color: #1D4ED8;
+}
+
+.divider {
+    text-align: center;
+    margin: 24px 0;
+    position: relative;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: rgba(148, 163, 184, 0.18);
+}
+
+.divider span {
+    position: relative;
+    background-color: #0D1526;
+    padding: 0 12px;
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+.btn-sso {
+    width: 100%;
+    padding: 12px;
+    background-color: rgba(148, 163, 184, 0.07);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 8px;
+    color: #D7E0EC;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-sso:hover {
+    background-color: rgba(148, 163, 184, 0.14);
+    border-color: rgba(148, 163, 184, 0.4);
+}
+
+.security-footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.security-footer i {
+    color: var(--accent);
+}
+
+/* --- ADAPTABILIDAD A PANTALLAS PEQUEÑAS --- */
+@media (max-width: 900px) {
+    .hero-section {
+        display: none;
+    }
+    .form-section {
+        flex: 1;
+    }
+}
+
+/* --- MENSAJES (Django messages framework) --- */
+.messages {
+    margin-bottom: 20px;
+}
+
+.message {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.message.error {
+    background-color: var(--danger-light);
+    color: #FCA5A5;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.message.success {
+    background-color: var(--success-light);
+    color: #6EE7B7;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.message.info {
+    background-color: rgba(37, 99, 235, 0.14);
+    color: #93C5FD;
+    border: 1px solid rgba(37, 99, 235, 0.38);
+}
+
+.message.warning {
+    background-color: var(--warning-light);
+    color: #FCD34D;
+    border: 1px solid rgba(251, 191, 36, 0.35);
+}

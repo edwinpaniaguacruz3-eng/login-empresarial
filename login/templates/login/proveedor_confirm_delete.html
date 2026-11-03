@@ -1,0 +1,58 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}Desactivar proveedor{% endblock %}
+
+{% block contenido %}
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            <a href="{% url 'proveedor_list' %}" class="breadcrumb">← Proveedores</a>
+        </span>
+
+        <h1>Desactivar proveedor</h1>
+
+        <p>El registro se conservará en la base de datos.</p>
+
+    </div>
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+        <div>
+            <h2>Confirmar desactivación</h2>
+            <p>Verifica que sea el registro correcto.</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+
+        <div class="confirm-box">
+            <p>
+                ¿Estás seguro de que deseas desactivar el proveedor
+                <strong>{{ proveedor.nombre }}</strong>?
+            </p>
+            <p class="confirm-note">
+                El proveedor dejará de aparecer en los listados operativos,
+                pero se conservan sus datos. Podrás reactivarlo cuando
+                quieras.
+            </p>
+        </div>
+
+        <form method="post" class="formulario">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-danger">🗑️ Sí, desactivar</button>
+                <a href="{% url 'proveedor_detail' pk=proveedor.pk %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}Departamentos{% endblock %}
+
+{% block contenido %}
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            Organización
+        </span>
+
+        <h1>
+            Departamentos
+        </h1>
+
+        <p>
+            Áreas operativas de la empresa.
+        </p>
+
+    </div>
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+
+        <div>
+
+            <h2>
+                Listado de Departamentos
+            </h2>
+
+            <p>
+                {{ page_obj.paginator.count }} registro{{ page_obj.paginator.count|pluralize }} en total.
+            </p>
+
+        </div>
+
+        {% if es_administrador %}
+        <div class="table-header-actions">
+            <a href="{% url 'departamento_create' %}" class="btn btn-primary btn-sm">
+                ➕ Nuevo departamento
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="filtro-estado" role="group" aria-label="Filtrar por estado">
+            <span class="filtro-label">Mostrar:</span>
+            <a href="{% url 'departamento_list' %}?estado=activos{% if query_busqueda %}&q={{ query_busqueda|urlencode }}{% endif %}" class="chip{% if estado_actual == 'activos' %} active{% endif %}">Activos</a>
+            <a href="{% url 'departamento_list' %}?estado=inactivos{% if query_busqueda %}&q={{ query_busqueda|urlencode }}{% endif %}" class="chip{% if estado_actual == 'inactivos' %} active{% endif %}">Inactivos</a>
+            <a href="{% url 'departamento_list' %}?estado=todos{% if query_busqueda %}&q={{ query_busqueda|urlencode }}{% endif %}" class="chip{% if estado_actual == 'todos' %} active{% endif %}">Todos</a>
+        </div>
+
+        <form method="GET" action="{% url 'departamento_list' %}" class="search-form">
+            <input
+                type="text"
+                name="q"
+                value="{{ query_busqueda }}"
+                placeholder="Buscar por nombre..."
+                class="search-input"
+            >
+            <button type="submit" class="btn-search">Buscar</button>
+            {% if query_busqueda %}
+            <a href="{% url 'departamento_list' %}" class="btn-clear">Limpiar</a>
+            {% endif %}
+        </form>
+
+    </div>
+
+    <div class="table-container">
+
+        <table class="employee-table">
+
+            <thead>
+                <tr>
+                    <th>Departamento</th>
+                    <th>Descripción</th>
+                    <th>Empleados</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for dep in page_obj %}
+                <tr>
+                    <td>
+                        <a href="{% url 'departamento_detail' pk=dep.pk %}" class="employee-link">
+                            {{ dep.nombre }}
+                        </a>
+                    </td>
+                    <td style="color: var(--text-muted);">{{ dep.descripcion|default:"—" }}</td>
+                    <td>
+                        <span class="badge role-user">{{ dep.total_empleados }} empleado{{ dep.total_empleados|pluralize }}</span>
+                    </td>
+                    <td class="table-actions">
+                        {% if es_administrador %}
+                        {% if dep.activo %}
+                        <a href="{% url 'departamento_update' pk=dep.pk %}" class="btn btn-secondary btn-xs" title="Editar">✏️</a>
+                        <a href="{% url 'departamento_delete' pk=dep.pk %}" class="btn btn-danger btn-xs" title="Desactivar">🗑️</a>
+                        {% else %}
+                        <form method="post" action="{% url 'departamento_reactivar' pk=dep.pk %}" class="inline-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-xs" title="Reactivar">✅</button>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="no-data">
+                        {% if query_busqueda %}
+                            No se encontraron resultados para
+                            <strong>"{{ query_busqueda }}"</strong>.
+                        {% else %}
+                            No hay departamentos registrados actualmente.
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% include "login/_pagination.html" %}
+
+</section>
+
+{% endblock %}

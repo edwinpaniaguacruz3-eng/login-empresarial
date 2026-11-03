@@ -1,0 +1,157 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}Roles y permisos{% endblock %}
+
+{% block contenido %}
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            Administración
+        </span>
+
+        <h1>Roles y permisos</h1>
+
+        <p>Consulta de los roles del sistema y lo que puede hacer cada uno.</p>
+
+    </div>
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+        <div>
+            <h2>Roles del sistema</h2>
+            <p>
+                {{ total_empleados }} usuario{{ total_empleados|pluralize }} activo{{ total_empleados|pluralize }},
+                {{ total_administradores }} con rol de administrador.
+            </p>
+        </div>
+        <a href="{% url 'empleado_list' %}" class="btn-clear">← Volver a Empleados</a>
+    </div>
+
+    <div class="table-container">
+
+        <table class="employee-table">
+
+            <thead>
+                <tr>
+                    <th>Rol</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for valor, nombre, descripcion in roles %}
+                <tr>
+                    <td>
+                        {% if valor == 'admin' %}
+                        <span class="badge role-admin">{{ nombre }}</span>
+                        {% else %}
+                        <span class="badge role-user">{{ nombre }}</span>
+                        {% endif %}
+                    </td>
+                    <td style="color: var(--text-muted);">{{ descripcion }}</td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+        <div>
+            <h2>Matriz de permisos por módulo</h2>
+            <p>Lo que puede hacer cada rol en cada módulo del sistema.</p>
+        </div>
+    </div>
+
+    <div class="table-container">
+
+        <table class="employee-table">
+
+            <thead>
+                <tr>
+                    <th>Módulo</th>
+                    <th>Operación</th>
+                    <th>Empleado</th>
+                    <th>Administrador</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for modulo, operacion, puede_empleado, puede_admin in matriz %}
+                <tr>
+                    <td>{{ modulo }}</td>
+                    <td style="color: var(--text-muted);">{{ operacion }}</td>
+                    <td>
+                        {% if puede_empleado %}
+                            <span class="badge active">✓</span>
+                        {% else %}
+                            <span class="badge inactive">—</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if puede_admin %}
+                            <span class="badge active">✓</span>
+                        {% else %}
+                            <span class="badge inactive">—</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+        <div>
+            <h2>Asignación de roles</h2>
+            <p>
+                Los permisos se asignan por empleado. Abre la ficha de un
+                empleado y usa <strong>«Rol y estado»</strong> para asignar
+                o retirar el rol de administrador, además de activar o
+                desactivar la cuenta.
+            </p>
+        </div>
+        {% if es_administrador %}
+        <div class="table-header-actions">
+            <a href="{% url 'empleado_list' %}" class="btn btn-primary btn-sm">
+                👥 Gestionar empleados
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="confirm-box">
+        <p class="confirm-note">
+            <strong>Nota:</strong> el sistema define dos roles de negocio
+            fijos (Empleado y Administrador) sobre el campo <code>rol</code>
+            de cada usuario. No se pueden crear roles adicionales desde la
+            interfaz: la asignación y retirada de permisos se realiza por
+            empleado y solo un administrador puede modificar el rol de
+            otro usuario (nunca el propio).
+        </p>
+    </div>
+
+</section>
+
+{% endblock %}

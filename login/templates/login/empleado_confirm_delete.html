@@ -1,0 +1,59 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}Desactivar empleado{% endblock %}
+
+{% block contenido %}
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            <a href="{% url 'empleado_list' %}" class="breadcrumb">← Empleados</a>
+        </span>
+
+        <h1>Desactivar empleado</h1>
+
+        <p>El registro se conservará en la base de datos.</p>
+
+    </div>
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+        <div>
+            <h2>Confirmar desactivación</h2>
+            <p>Verifica que sea el registro correcto.</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+
+        <div class="confirm-box">
+            <p>
+                ¿Estás seguro de que deseas desactivar a
+                <strong>{{ empleado.nombre_completo }}</strong>
+                ({{ empleado.correo }})?
+            </p>
+            <p class="confirm-note">
+                El empleado perderá el acceso al sistema inmediatamente, pero sus
+                datos, su identificador y su historial se conservan. Podrás
+                reactivarlo desde «Rol y estado».
+            </p>
+        </div>
+
+        <form method="post" class="formulario">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-danger">🗑️ Sí, desactivar</button>
+                <a href="{% url 'empleado_detail' pk=empleado.pk %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

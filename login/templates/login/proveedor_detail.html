@@ -1,0 +1,91 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}{{ proveedor.nombre }}{% endblock %}
+
+{% block contenido %}
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            <a href="{% url 'proveedor_list' %}" class="breadcrumb">← Proveedores</a>
+        </span>
+
+        <h1>{{ proveedor.nombre }}</h1>
+
+        <p>{{ proveedor.contacto|default:"Proveedor de la empresa." }}</p>
+
+        {% if not proveedor.activo %}
+        <p><span class="badge inactive">Desactivado — los datos se conservan</span></p>
+        {% endif %}
+
+    </div>
+
+    {% if es_administrador %}
+    <div class="table-header-actions">
+        <a href="{% url 'proveedor_update' pk=proveedor.pk %}" class="btn btn-secondary btn-sm">✏️ Editar</a>
+        {% if proveedor.activo %}
+        <a href="{% url 'proveedor_delete' pk=proveedor.pk %}" class="btn btn-danger btn-sm">🗑️ Desactivar</a>
+        {% else %}
+        <form method="post" action="{% url 'proveedor_reactivar' pk=proveedor.pk %}" class="inline-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-sm">✅ Reactivar</button>
+        </form>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+        <div>
+            <h2>Información del proveedor</h2>
+            <p>Datos de contacto y estado del registro.</p>
+        </div>
+    </div>
+
+    <div class="detail-grid">
+
+        <div class="detail-item">
+            <span class="detail-label">Nombre</span>
+            <span class="detail-value">{{ proveedor.nombre }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Contacto</span>
+            <span class="detail-value">{{ proveedor.contacto|default:"—" }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Correo</span>
+            <span class="detail-value">{{ proveedor.correo|default:"—" }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Teléfono</span>
+            <span class="detail-value">{{ proveedor.telefono|default:"—" }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Dirección</span>
+            <span class="detail-value">{{ proveedor.direccion|default:"—" }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Fecha de alta</span>
+            <span class="detail-value">{{ proveedor.fecha_alta|date:"d/m/Y" }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Estado</span>
+            <span class="detail-value">{% if proveedor.activo %}Activo{% else %}Desactivado{% endif %}</span>
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

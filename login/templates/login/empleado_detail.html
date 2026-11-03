@@ -1,0 +1,111 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}{{ empleado.nombre_completo }}{% endblock %}
+
+{% block contenido %}
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            <a href="{% url 'empleado_list' %}" class="breadcrumb">← Empleados</a>
+        </span>
+
+        <h1>{{ empleado.nombre_completo }}</h1>
+
+        <p>{{ empleado.puesto }} · {{ empleado.departamento.nombre }}</p>
+
+    </div>
+
+    {% if es_administrador %}
+    <div class="table-header-actions">
+        <a href="{% url 'empleado_update' pk=empleado.pk %}" class="btn btn-secondary btn-sm">✏️ Editar</a>
+        <a href="{% url 'empleado_rol' pk=empleado.pk %}" class="btn btn-secondary btn-sm">🔐 Rol y estado</a>
+        <a href="{% url 'empleado_contrasena' pk=empleado.pk %}" class="btn btn-secondary btn-sm">🔑 Contraseña</a>
+        {% if empleado.activo %}
+        <a href="{% url 'empleado_delete' pk=empleado.pk %}" class="btn btn-danger btn-sm">🗑️ Desactivar</a>
+        {% else %}
+        <a href="{% url 'empleado_rol' pk=empleado.pk %}" class="btn btn-primary btn-sm">✅ Reactivar</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+        <div>
+            <h2>Información del empleado</h2>
+            <p>Ficha completa del registro.</p>
+        </div>
+    </div>
+
+    <div class="detail-grid">
+
+        <div class="detail-item">
+            <span class="detail-label">Nombre completo</span>
+            <span class="detail-value">{{ empleado.nombre_completo }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Correo electrónico</span>
+            <span class="detail-value">{{ empleado.correo }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Puesto</span>
+            <span class="detail-value">{{ empleado.puesto }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Departamento</span>
+            <span class="detail-value">
+                <a href="{% url 'departamento_detail' pk=empleado.departamento.pk %}">{{ empleado.departamento.nombre }}</a>
+            </span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Fecha de ingreso</span>
+            <span class="detail-value">{{ empleado.fecha_ingreso|date:"d/m/Y" }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Rol</span>
+            <span class="detail-value">
+                {% if empleado.es_administrador %}
+                    <span class="badge role-admin">Administrador</span>
+                {% else %}
+                    <span class="badge role-user">Empleado</span>
+                {% endif %}
+            </span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Estado</span>
+            <span class="detail-value">
+                {% if empleado.activo %}
+                    <span class="badge active">Activo</span>
+                {% else %}
+                    <span class="badge inactive">Inactivo</span>
+                {% endif %}
+            </span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Acceso con contraseña</span>
+            <span class="detail-value">
+                {% if empleado.password %}
+                    <span class="badge active">Configurada</span>
+                {% else %}
+                    <span class="badge inactive">Sin configurar</span>
+                {% endif %}
+            </span>
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

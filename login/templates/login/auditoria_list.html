@@ -1,0 +1,109 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}Auditoría{% endblock %}
+
+{% block contenido %}
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            Administración
+        </span>
+
+        <h1>Registro de auditoría</h1>
+
+        <p>Historial de acciones administrativas y de seguridad.</p>
+
+    </div>
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+
+        <div>
+            <h2>Eventos registrados</h2>
+            <p>Solo lectura. Los registros se conservan como histórico.</p>
+        </div>
+
+        <form method="GET" action="{% url 'auditoria_list' %}" class="search-form">
+
+            <select name="modulo" class="search-input" onchange="this.form.submit()">
+                <option value="">Todos los módulos</option>
+                {% for valor, etiqueta in modulos %}
+                <option value="{{ valor }}" {% if modulo_actual == valor %}selected{% endif %}>
+                    {{ etiqueta }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <select name="accion" class="search-input" onchange="this.form.submit()">
+                <option value="">Todas las acciones</option>
+                {% for valor, etiqueta in acciones %}
+                <option value="{{ valor }}" {% if accion_actual == valor %}selected{% endif %}>
+                    {{ etiqueta }}
+                </option>
+                {% endfor %}
+            </select>
+
+            {% if modulo_actual or accion_actual %}
+            <a href="{% url 'auditoria_list' %}" class="btn-clear">Limpiar</a>
+            {% endif %}
+
+        </form>
+
+    </div>
+
+    <div class="table-container">
+
+        <table class="employee-table">
+
+            <thead>
+                <tr>
+                    <th>Fecha y hora</th>
+                    <th>Usuario</th>
+                    <th>Módulo</th>
+                    <th>Acción</th>
+                    <th>Detalle</th>
+                    <th>IP</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for reg in page_obj %}
+                <tr>
+                    <td style="white-space: nowrap;">{{ reg.fecha|date:"d/m/Y H:i" }}</td>
+                    <td>{{ reg.usuario }}</td>
+                    <td>{{ reg.get_modulo_display }}</td>
+                    <td>
+                        {% with etiqueta=reg.get_accion_display %}
+                        <span class="badge role-user">{{ etiqueta }}</span>
+                        {% endwith %}
+                    </td>
+                    <td style="color: var(--text-muted);">{{ reg.detalle|default:"—" }}</td>
+                    <td style="color: var(--text-muted);">{{ reg.ip|default:"—" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="no-data">
+                        No hay registros de auditoría
+                        {% if modulo_actual or accion_actual %}para los filtros seleccionados{% endif %}.
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% include "login/_pagination.html" %}
+
+</section>
+
+{% endblock %}

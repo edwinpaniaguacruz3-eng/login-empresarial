@@ -1,0 +1,145 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}Proveedores{% endblock %}
+
+{% block contenido %}
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            Catálogo
+        </span>
+
+        <h1>
+            Proveedores
+        </h1>
+
+        <p>
+            Proveedores registrados en la empresa.
+        </p>
+
+    </div>
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+
+        <div>
+
+            <h2>
+                Listado de Proveedores
+            </h2>
+
+            <p>
+                {{ page_obj.paginator.count }} registro{{ page_obj.paginator.count|pluralize }} en total.
+            </p>
+
+        </div>
+
+        {% if es_administrador %}
+        <div class="table-header-actions">
+            <a href="{% url 'proveedor_create' %}" class="btn btn-primary btn-sm">
+                ➕ Nuevo proveedor
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="filtro-estado" role="group" aria-label="Filtrar por estado">
+            <span class="filtro-label">Mostrar:</span>
+            <a href="{% url 'proveedor_list' %}?estado=activos{% if query_busqueda %}&q={{ query_busqueda|urlencode }}{% endif %}" class="chip{% if estado_actual == 'activos' %} active{% endif %}">Activos</a>
+            <a href="{% url 'proveedor_list' %}?estado=inactivos{% if query_busqueda %}&q={{ query_busqueda|urlencode }}{% endif %}" class="chip{% if estado_actual == 'inactivos' %} active{% endif %}">Inactivos</a>
+            <a href="{% url 'proveedor_list' %}?estado=todos{% if query_busqueda %}&q={{ query_busqueda|urlencode }}{% endif %}" class="chip{% if estado_actual == 'todos' %} active{% endif %}">Todos</a>
+        </div>
+
+        <form method="GET" action="{% url 'proveedor_list' %}" class="search-form">
+            <input
+                type="text"
+                name="q"
+                value="{{ query_busqueda }}"
+                placeholder="Buscar por nombre, contacto o correo..."
+                class="search-input"
+            >
+            <button type="submit" class="btn-search">Buscar</button>
+            {% if query_busqueda %}
+            <a href="{% url 'proveedor_list' %}" class="btn-clear">Limpiar</a>
+            {% endif %}
+        </form>
+
+    </div>
+
+    <div class="table-container">
+
+        <table class="employee-table">
+
+            <thead>
+                <tr>
+                    <th>Proveedor</th>
+                    <th>Contacto</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for prov in page_obj %}
+                <tr>
+                    <td>
+                        <a href="{% url 'proveedor_detail' pk=prov.pk %}" class="employee-link">
+                            {{ prov.nombre }}
+                        </a>
+                    </td>
+                    <td style="color: var(--text-muted);">{{ prov.contacto|default:"—" }}</td>
+                    <td style="color: var(--text-muted);">{{ prov.correo|default:"—" }}</td>
+                    <td style="color: var(--text-muted);">{{ prov.telefono|default:"—" }}</td>
+                    <td>
+                        {% if prov.activo %}
+                            <span class="badge active">Activo</span>
+                        {% else %}
+                            <span class="badge inactive">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td class="table-actions">
+                        {% if es_administrador %}
+                        {% if prov.activo %}
+                        <a href="{% url 'proveedor_update' pk=prov.pk %}" class="btn btn-secondary btn-xs" title="Editar">✏️</a>
+                        <a href="{% url 'proveedor_delete' pk=prov.pk %}" class="btn btn-danger btn-xs" title="Desactivar">🗑️</a>
+                        {% else %}
+                        <form method="post" action="{% url 'proveedor_reactivar' pk=prov.pk %}" class="inline-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-xs" title="Reactivar">✅</button>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="no-data">
+                        {% if query_busqueda %}
+                            No se encontraron resultados para
+                            <strong>"{{ query_busqueda }}"</strong>.
+                        {% else %}
+                            No hay proveedores registrados actualmente.
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% include "login/_pagination.html" %}
+
+</section>
+
+{% endblock %}

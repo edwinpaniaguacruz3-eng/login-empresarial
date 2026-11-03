@@ -1,0 +1,64 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}Cambiar contraseña{% endblock %}
+
+{% block contenido %}
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            <a href="{% url 'perfil' %}" class="breadcrumb">← Mi perfil</a>
+        </span>
+
+        <h1>Cambiar mi contraseña</h1>
+
+        <p>Introduce tu contraseña actual y la nueva (se almacena hasheada).</p>
+
+    </div>
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+        <div>
+            <h2>Nueva contraseña</h2>
+            <p>Mínimo 8 caracteres. Se aplican las reglas de seguridad del sistema.</p>
+        </div>
+        <a href="{% url 'perfil' %}" class="btn-clear">← Cancelar</a>
+    </div>
+
+    <div class="form-container">
+
+        <form method="post" class="formulario" novalidate>
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="form-group{% if field.errors %} has-error{% endif %}">
+                <label class="form-label" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="form-help">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <small class="form-error">{{ error }}</small>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">🔑 Actualizar contraseña</button>
+                <a href="{% url 'perfil' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

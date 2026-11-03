@@ -1,0 +1,65 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}Rol y estado{% endblock %}
+
+{% block contenido %}
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            <a href="{% url 'empleado_list' %}" class="breadcrumb">← Empleados</a>
+        </span>
+
+        <h1>Rol y estado de {{ empleado.nombre_completo }}</h1>
+
+        <p>Define lo que este empleado puede hacer en el sistema.</p>
+
+    </div>
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+        <div>
+            <h2>Asignación de permisos</h2>
+            <p>
+                <strong>Administrador:</strong> gestiona empleados, departamentos,
+                contraseñas y auditoría.
+                <strong>Empleado:</strong> consulta el directorio y su perfil.
+            </p>
+        </div>
+        <a href="{% url 'empleado_detail' pk=empleado.pk %}" class="btn-clear">← Volver</a>
+    </div>
+
+    <div class="form-container">
+
+        <form method="post" class="formulario">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="form-group{% if field.errors %} has-error{% endif %}">
+                <label class="form-label" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% for error in field.errors %}
+                    <small class="form-error">{{ error }}</small>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                <a href="{% url 'empleado_detail' pk=empleado.pk %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

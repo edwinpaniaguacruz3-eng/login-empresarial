@@ -1,0 +1,29 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}Acceso denegado{% endblock %}
+
+{% block contenido %}
+
+<section class="content-section">
+
+    <div class="no-data" style="padding: 3rem 1rem;">
+
+        <div class="no-data-icon">🔒</div>
+
+        <h2 class="no-data-title">
+            Acceso denegado (403)
+        </h2>
+
+        <p class="no-data-text">
+            No tienes permisos de administrador para acceder a esta sección.
+        </p>
+
+        <p class="no-data-text" style="margin-top: 0.5rem;">
+            <a href="{% url 'home' %}" class="employee-link">← Volver al inicio</a>
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}

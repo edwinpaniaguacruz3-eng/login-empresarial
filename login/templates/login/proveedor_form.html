@@ -1,0 +1,68 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}{{ titulo }}{% endblock %}
+
+{% block contenido %}
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            <a href="{% url 'proveedor_list' %}" class="breadcrumb">← Proveedores</a>
+        </span>
+
+        <h1>{{ titulo }}</h1>
+
+        <p>Registra un proveedor de la empresa.</p>
+
+    </div>
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+        <div>
+            <h2>{{ titulo }}</h2>
+            <p>Los campos marcados con * son obligatorios.</p>
+        </div>
+        <a href="{% if proveedor %}{% url 'proveedor_detail' pk=proveedor.pk %}{% else %}{% url 'proveedor_list' %}{% endif %}" class="btn-clear">
+            ← Cancelar
+        </a>
+    </div>
+
+    <div class="form-container">
+
+        <form method="post" class="formulario" novalidate>
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="form-group{% if field.errors %} has-error{% endif %}">
+                <label class="form-label" for="{{ field.id_for_label }}">
+                    {{ field.label }}{% if field.field.required %} *{% endif %}
+                </label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="form-help">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <small class="form-error">{{ error }}</small>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ accion }}</button>
+                <a href="{% if proveedor %}{% url 'proveedor_detail' pk=proveedor.pk %}{% else %}{% url 'proveedor_list' %}{% endif %}" class="btn btn-secondary">
+                    Cancelar
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

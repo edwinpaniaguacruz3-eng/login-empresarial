@@ -1,0 +1,135 @@
+{% extends "login/base.html" %}
+
+{% block titulo_pagina %}{{ departamento.nombre }}{% endblock %}
+
+{% block contenido %}
+
+<section class="dashboard-header">
+
+    <div class="dashboard-title">
+
+        <span class="section-label">
+            <a href="{% url 'departamento_list' %}" class="breadcrumb">← Departamentos</a>
+        </span>
+
+        <h1>{{ departamento.nombre }}</h1>
+
+        <p>{{ departamento.descripcion|default:"Área operativa de la empresa." }}</p>
+
+        {% if not departamento.activo %}
+        <p><span class="badge inactive">Desactivado — los datos se conservan</span></p>
+        {% endif %}
+
+    </div>
+
+    {% if es_administrador %}
+    <div class="table-header-actions">
+        <a href="{% url 'departamento_update' pk=departamento.pk %}" class="btn btn-secondary btn-sm">✏️ Editar</a>
+        {% if departamento.activo %}
+        <a href="{% url 'departamento_delete' pk=departamento.pk %}" class="btn btn-danger btn-sm">🗑️ Desactivar</a>
+        {% else %}
+        <form method="post" action="{% url 'departamento_reactivar' pk=departamento.pk %}" class="inline-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-sm">✅ Reactivar</button>
+        </form>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+        <div>
+            <h2>Información del departamento</h2>
+            <p>{{ departamento.total_empleados }} empleado{{ departamento.total_empleados|pluralize }} asignado{{ departamento.total_empleados|pluralize }}.</p>
+        </div>
+    </div>
+
+    <div class="detail-grid">
+
+        <div class="detail-item">
+            <span class="detail-label">Nombre</span>
+            <span class="detail-value">{{ departamento.nombre }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Descripción</span>
+            <span class="detail-value">{{ departamento.descripcion|default:"—" }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Empleados asignados</span>
+            <span class="detail-value">{{ departamento.total_empleados }}</span>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="content-section">
+
+    <div class="table-header">
+        <div>
+            <h2>Empleados del departamento</h2>
+            <p>Personal asignado a esta área.</p>
+        </div>
+    </div>
+
+    <div class="table-container">
+
+        <table class="employee-table">
+
+            <thead>
+                <tr>
+                    <th>Empleado</th>
+                    <th>Correo</th>
+                    <th>Puesto</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for emp in page_obj %}
+                <tr>
+                    <td>
+                        <div class="employee-cell">
+                            <div class="avatar">{{ emp.iniciales }}</div>
+                            <div class="employee-info">
+                                <a href="{% url 'empleado_detail' pk=emp.pk %}" class="employee-link">
+                                    {{ emp.nombre }} {{ emp.apellido }}
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="color: var(--text-muted);">{{ emp.correo }}</td>
+                    <td>{{ emp.puesto }}</td>
+                    <td>
+                        {% if emp.activo %}
+                            <span class="badge active">Activo</span>
+                        {% else %}
+                            <span class="badge inactive">Inactivo</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="no-data">
+                        No hay empleados asignados a este departamento.
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% include "login/_pagination.html" %}
+
+</section>
+
+{% endblock %}
